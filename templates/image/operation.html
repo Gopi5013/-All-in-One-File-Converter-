@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ operation.title }} — Document Tools{% endblock %}
+
+{% block content %}
+<main id="main-content" class="tool-page">
+  <section class="tool-page-header container">
+    <a class="back-link" href="{{ url_for('main.index') }}#tools">← All tools</a>
+    <p class="eyebrow">Image tools</p>
+    <h1>{{ operation.title }}</h1>
+    <p>{{ operation.description }}</p>
+  </section>
+
+  <section class="resize-panel container" aria-label="{{ operation.title }} options">
+    {% if error %}
+    <p class="form-message form-message-error" role="alert">{{ error }}</p>
+    {% endif %}
+
+    {% if result %}
+    <div class="form-message form-message-success" role="status">
+      <p>{{ result.message }}</p>
+      {% if result.width is defined %}
+      <p>Output dimensions: {{ result.width }} × {{ result.height }} pixels.</p>
+      {% endif %}
+      <a class="button-primary download-button" href="{{ result.download_url }}">Download {{ result.download_name }}</a>
+    </div>
+    {% endif %}
+
+    <form id="{{ operation_id }}-form" method="post" enctype="multipart/form-data">
+      <label class="field-label" for="operation-image">Choose an image</label>
+      <label class="upload-dropzone" for="operation-image">
+        <span class="upload-symbol" aria-hidden="true">↑</span>
+        <span class="upload-title">Choose a JPG, PNG, or WebP image</span>
+        <span class="upload-hint">Up to {{ max_upload_mb }} MB</span>
+        <input
+          class="visually-hidden"
+          id="operation-image"
+          name="image"
+          type="file"
+          accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+          required>
+      </label>
+
+      {% if operation.quality %}
+      <label class="field-label operation-field" for="quality">
+        Quality (1–100)
+        <input class="operation-text-input" id="quality" name="quality" type="number" min="1" max="100" value="85" required>
+      </label>
+      <p class="field-help">Lower values make smaller files. PNG uses this setting to trade file size against encoding speed.</p>
+      {% endif %}
+
+      {% if operation.format %}
+      <label class="field-label operation-field" for="output-format">Output format</label>
+      <select class="operation-select" id="output-format" name="output_format" required>
+        <option value="JPEG">JPG</option>
+        <option value="PNG">PNG</option>
+        <option value="WEBP">WebP</option>
+      </select>
+      {% endif %}
+
+      {% if operation.crop %}
+      <fieldset class="dimension-fields operation-field">
+        <legend>Crop rectangle (pixels)</legend>
+        <div class="dimension-inputs">
+          <label class="field-label" for="crop-left">
+            Left
+            <input class="operation-text-input" id="crop-left" name="left" type="number" min="0" value="0" required>
+          </label>
+          <label class="field-label" for="crop-top">
+            Top
+            <input class="operation-text-input" id="crop-top" name="top" type="number" min="0" value="0" required>
+          </label>
+          <label class="field-label" for="crop-width">
+            Width
+            <input class="operation-text-input" id="crop-width" name="crop_width" type="number" min="1" value="800" required>
+          </label>
+          <label class="field-label" for="crop-height">
+            Height
+            <input class="operation-text-input" id="crop-height" name="crop_height" type="number" min="1" value="600" required>
+          </label>
+        </div>
+      </fieldset>
+      <label class="field-label operation-field" for="rotation">Rotation</label>
+      <select class="operation-select" id="rotation" name="rotation" required>
+        <option value="0">No rotation</option>
+        <option value="90">90° clockwise</option>
+        <option value="180">180°</option>
+        <option value="270">270° clockwise</option>
+      </select>
+      <p class="field-help">Coordinates are measured from the top-left of the orientation-corrected image.</p>
+      {% endif %}
+
+      <div class="resize-actions">
+        <button class="button-primary" type="submit">{{ operation.button }}</button>
+        <button class="button-secondary" type="reset">Clear</button>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock %}

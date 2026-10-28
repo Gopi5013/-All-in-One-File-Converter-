@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}PDF to Word — Document Tools{% endblock %}
+
+{% block content %}
+<main id="main-content" class="tool-page">
+  <section class="tool-page-header container">
+    <a class="back-link" href="{{ url_for('main.index') }}#tools">← All tools</a>
+    <p class="eyebrow">PDF tools</p>
+    <h1>PDF to Word</h1>
+    <p>Convert PDF pages into an editable Word document. Scanned PDFs need OCR to produce editable text; this tool does not perform OCR.</p>
+  </section>
+
+  <section class="resize-panel container" aria-label="PDF to Word options">
+    {% if error %}
+    <p class="form-message form-message-error" role="alert">{{ error }}</p>
+    {% endif %}
+
+    {% if result %}
+    <div class="form-message form-message-success" role="status">
+      <p>Converted {{ result.page_count }} PDF {{ "page" if result.page_count == 1 else "pages" }} to a Word document.</p>
+      <a class="button-primary download-button" href="{{ result.download_url }}">Download Word document</a>
+    </div>
+    {% endif %}
+
+    <form id="pdf-to-word-form" method="post" enctype="multipart/form-data">
+      <label class="field-label" for="pdf-word-file">Choose a PDF</label>
+      <label class="upload-dropzone" id="pdf-word-dropzone" for="pdf-word-file">
+        <span class="upload-symbol" aria-hidden="true">↑</span>
+        <span class="upload-title">Drop a PDF here or <strong>browse</strong></span>
+        <span class="upload-hint">PDF · up to {{ max_upload_mb }} MB</span>
+        <input
+          class="visually-hidden"
+          id="pdf-word-file"
+          name="pdf"
+          type="file"
+          accept=".pdf,application/pdf"
+          required>
+      </label>
+      <p class="file-details" id="pdf-word-file-details" hidden></p>
+
+      <div class="resize-actions">
+        <button class="button-primary" id="pdf-word-submit" type="submit">Convert to Word</button>
+        <button class="button-secondary" type="reset">Clear</button>
+      </div>
+      <p class="processing-status" id="pdf-word-processing-status" role="status" aria-live="polite" hidden>
+        Converting PDF… This may take a little while.
+      </p>
+    </form>
+  </section>
+</main>
+{% endblock %}

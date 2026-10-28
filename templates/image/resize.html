@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Resize image — Document Tools{% endblock %}
+
+{% block content %}
+<main id="main-content" class="tool-page">
+  <section class="tool-page-header container">
+    <a class="back-link" href="{{ url_for('main.index') }}#tools">← All tools</a>
+    <p class="eyebrow">Image tools</p>
+    <h1>Resize image</h1>
+    <p>Set the dimensions you need. Keep the original proportions or use an exact width and height.</p>
+  </section>
+
+  <section class="resize-panel container" aria-label="Image resize options">
+    {% if error %}
+    <p class="form-message form-message-error" role="alert">{{ error }}</p>
+    {% endif %}
+
+    {% if result %}
+    <div class="form-message form-message-success" role="status">
+      <p>Image resized to {{ result.width }} × {{ result.height }} pixels.</p>
+      <a class="button-primary download-button" href="{{ result.download_url }}">Download resized image</a>
+    </div>
+    {% endif %}
+
+    <form id="resize-form" method="post" enctype="multipart/form-data">
+      <div class="resize-layout">
+        <div class="resize-upload-column">
+          <label class="field-label" for="image-file">Choose an image</label>
+          <label class="upload-dropzone" id="upload-dropzone" for="image-file">
+            <span class="upload-symbol" aria-hidden="true">↑</span>
+            <span class="upload-title">Drop an image here or <strong>browse</strong></span>
+            <span class="upload-hint">JPG, PNG, or WebP · up to {{ max_upload_mb }} MB</span>
+            <input
+              class="visually-hidden"
+              id="image-file"
+              name="image"
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+              required>
+          </label>
+          <p class="file-details" id="file-details" hidden></p>
+          <div class="image-preview" id="image-preview" hidden>
+            <img id="image-preview-content" alt="">
+          </div>
+        </div>
+
+        <div class="resize-options">
+          <fieldset class="dimension-fields">
+            <legend>Output dimensions</legend>
+            <div class="dimension-inputs">
+              <label class="field-label" for="image-width">
+                Width (px)
+                <input
+                  id="image-width"
+                  name="width"
+                  type="number"
+                  min="1"
+                  max="{{ max_dimension }}"
+                  value="{{ width }}"
+                  required>
+              </label>
+              <label class="field-label" for="image-height">
+                Height (px)
+                <input
+                  id="image-height"
+                  name="height"
+                  type="number"
+                  min="1"
+                  max="{{ max_dimension }}"
+                  value="{{ height }}"
+                  required>
+              </label>
+            </div>
+            <label class="aspect-ratio-option" for="maintain-aspect">
+              <input
+                id="maintain-aspect"
+                name="maintain_aspect"
+                type="checkbox"
+                {% if maintain_aspect %}checked{% endif %}>
+              <span>Maintain aspect ratio</span>
+            </label>
+            <p class="field-help">With this enabled, the image fits inside the dimensions above without stretching.</p>
+            <p class="field-help">Maximum width and height: {{ max_dimension }} pixels.</p>
+          </fieldset>
+
+          <div class="resize-actions">
+            <button class="button-primary" id="resize-submit" type="submit">Resize image</button>
+            <button class="button-secondary" type="reset">Clear</button>
+          </div>
+          <p class="processing-status" id="processing-status" role="status" aria-live="polite" hidden>
+            Processing image…
+          </p>
+        </div>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock %}

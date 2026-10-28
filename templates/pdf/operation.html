@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}{{ operation.title }} — Document Tools{% endblock %}
+
+{% block content %}
+<main id="main-content" class="tool-page">
+  <section class="tool-page-header container">
+    <a class="back-link" href="{{ url_for('main.index') }}#tools">← All tools</a>
+    <p class="eyebrow">PDF tools</p>
+    <h1>{{ operation.title }}</h1>
+    <p>{{ operation.description }}</p>
+  </section>
+
+  <section class="resize-panel container" aria-label="{{ operation.title }} options">
+    {% if error %}
+    <p class="form-message form-message-error" role="alert">{{ error }}</p>
+    {% endif %}
+
+    {% if result %}
+    <div class="form-message form-message-success" role="status">
+      <p>{{ result.message }}</p>
+      <a class="button-primary download-button" href="{{ result.download_url }}">Download {{ result.download_name }}</a>
+    </div>
+    {% endif %}
+
+    <form id="{{ operation_id }}-form" method="post" enctype="multipart/form-data">
+      {% if operation_id == "images-to-pdf" %}
+      <label class="field-label" for="operation-files">Choose images</label>
+      <label class="upload-dropzone" for="operation-files">
+        <span class="upload-symbol" aria-hidden="true">↑</span>
+        <span class="upload-title">Select images in the order you want</span>
+        <span class="upload-hint">JPG, PNG, or WebP · 1 to {{ max_image_files }} files · up to {{ max_upload_mb }} MB total</span>
+        <input
+          class="visually-hidden"
+          id="operation-files"
+          name="images"
+          type="file"
+          accept="{{ operation.accept }}"
+          multiple
+          required>
+      </label>
+      {% elif operation_id == "word-to-pdf" %}
+      <label class="field-label" for="operation-files">Choose a Word document</label>
+      <label class="upload-dropzone" for="operation-files">
+        <span class="upload-symbol" aria-hidden="true">↑</span>
+        <span class="upload-title">Choose a DOCX document</span>
+        <span class="upload-hint">DOCX · up to {{ max_upload_mb }} MB · converted locally with Microsoft Word</span>
+        <input
+          class="visually-hidden"
+          id="operation-files"
+          name="document"
+          type="file"
+          accept="{{ operation.accept }}"
+          required>
+      </label>
+      {% else %}
+      <label class="field-label" for="operation-files">Choose a PDF</label>
+      <label class="upload-dropzone" for="operation-files">
+        <span class="upload-symbol" aria-hidden="true">↑</span>
+        <span class="upload-title">Choose a PDF file</span>
+        <span class="upload-hint">PDF · up to {{ max_upload_mb }} MB</span>
+        <input
+          class="visually-hidden"
+          id="operation-files"
+          name="pdf"
+          type="file"
+          accept="{{ operation.accept }}"
+          required>
+      </label>
+      {% endif %}
+
+      {% if operation.ranges %}
+      <label class="field-label operation-field" for="page-ranges">Page numbers or ranges</label>
+      <input
+        class="operation-text-input"
+        id="page-ranges"
+        name="page_ranges"
+        type="text"
+        placeholder="For example: 1-3, 5"
+        {% if operation_id != "rotate-pdf" %}required{% endif %}>
+      <p class="field-help">
+        {% if operation_id == "rotate-pdf" %}Leave blank to rotate every page.{% else %}Use 1-based page numbers. Ranges must not overlap.{% endif %}
+      </p>
+      {% endif %}
+
+      {% if operation.rotation %}
+      <label class="field-label operation-field" for="rotation">Rotation</label>
+      <select class="operation-select" id="rotation" name="rotation" required>
+        <option value="90">90° clockwise</option>
+        <option value="180">180°</option>
+        <option value="270">270° clockwise</option>
+      </select>
+      {% endif %}
+
+      <div class="resize-actions">
+        <button class="button-primary" type="submit">{{ operation.button }}</button>
+        <button class="button-secondary" type="reset">Clear</button>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock %}
