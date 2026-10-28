@@ -1,0 +1,8 @@
+[build]
+  publish = "static"
+
+[[redirects]]
+  from = "/*"
+  to = "https://all-in-one-file-converter-ycpz.onrender.com/:splat"
+  status = 200
+  force = true
