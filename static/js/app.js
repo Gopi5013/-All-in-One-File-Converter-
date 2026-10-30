@@ -59,6 +59,59 @@ if (searchInput) {
   updateTools();
 }
 
+for (const fileInput of document.querySelectorAll("input[type='file'][data-file-status]")) {
+  const fileDetails = document.getElementById(fileInput.dataset.fileStatus);
+  const dropZone = fileInput.closest(".upload-dropzone");
+  const form = fileInput.form;
+
+  function showSelectedFiles(files) {
+    if (!files.length) {
+      fileDetails.textContent = "";
+      fileDetails.hidden = true;
+      return;
+    }
+
+    const fileNames = [...files]
+      .map((file) => `${file.name} · ${(file.size / (1024 * 1024)).toFixed(2)} MB`)
+      .join("; ");
+    const fileCount = files.length === 1 ? "1 file" : `${files.length} files`;
+    fileDetails.textContent = `${fileCount} selected and ready to process: ${fileNames}`;
+    fileDetails.hidden = false;
+  }
+
+  fileInput.addEventListener("change", () => {
+    showSelectedFiles(fileInput.files);
+  });
+
+  for (const eventName of ["dragenter", "dragover"]) {
+    dropZone.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      dropZone.classList.add("is-dragging");
+    });
+  }
+
+  for (const eventName of ["dragleave", "drop"]) {
+    dropZone.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      dropZone.classList.remove("is-dragging");
+    });
+  }
+
+  dropZone.addEventListener("drop", (event) => {
+    const { files } = event.dataTransfer;
+    if (!files.length) {
+      return;
+    }
+
+    fileInput.files = files;
+    showSelectedFiles(files);
+  });
+
+  form.addEventListener("reset", () => {
+    window.setTimeout(() => showSelectedFiles(fileInput.files));
+  });
+}
+
 const resizeForm = document.querySelector("#resize-form");
 
 if (resizeForm) {

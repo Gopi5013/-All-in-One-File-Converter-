@@ -123,6 +123,9 @@ def test_homepage_marks_pdf_merger_as_available(client):
     response = client.get("/")
 
     assert response.status_code == 200
+    assert re.search(rb'<h1 id="tools-heading">', response.data)
+    assert re.search(rb'<h2 id="pdf-heading">PDF tools</h2>', response.data)
+    assert re.search(rb"<h3>Merge PDF</h3>", response.data)
     assert b'href="/tools/pdf-to-word"' in response.data
     assert b'href="/tools/merge-pdf"' in response.data
     assert b"13</strong> available of 13 tools" in response.data
@@ -298,6 +301,8 @@ def test_new_pdf_tool_pages_are_available(client, path):
 
     assert response.status_code == 200
     assert b"<form" in response.data
+    assert b'data-file-status="operation-file-details"' in response.data
+    assert b'id="operation-file-details" role="status"' in response.data
 
 
 def test_split_pdf_produces_a_zip_with_requested_ranges(client, app):

@@ -37,6 +37,7 @@
           type="file"
           accept="{{ operation.accept }}"
           multiple
+          data-file-status="operation-file-details"
           required>
       </label>
       {% elif operation_id == "word-to-pdf" %}
@@ -51,6 +52,7 @@
           name="document"
           type="file"
           accept="{{ operation.accept }}"
+          data-file-status="operation-file-details"
           required>
       </label>
       {% else %}
@@ -65,9 +67,11 @@
           name="pdf"
           type="file"
           accept="{{ operation.accept }}"
+          data-file-status="operation-file-details"
           required>
       </label>
       {% endif %}
+      <p class="file-details" id="operation-file-details" role="status" aria-live="polite" hidden></p>
 
       {% if operation.ranges %}
       <label class="field-label operation-field" for="page-ranges">Page numbers or ranges</label>

@@ -204,6 +204,8 @@ def test_new_image_tool_pages_are_available(client, path):
 
     assert response.status_code == 200
     assert b"<form" in response.data
+    assert b'data-file-status="operation-file-details"' in response.data
+    assert b'id="operation-file-details" role="status"' in response.data
 
 
 def test_new_image_tool_reports_upload_limit(app):

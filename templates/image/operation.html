@@ -38,8 +38,10 @@
           name="image"
           type="file"
           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+          data-file-status="operation-file-details"
           required>
       </label>
+      <p class="file-details" id="operation-file-details" role="status" aria-live="polite" hidden></p>
 
       {% if operation.quality %}
       <label class="field-label operation-field" for="quality">

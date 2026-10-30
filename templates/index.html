@@ -9,7 +9,7 @@
       <div class="section-heading">
         <div>
           <p class="eyebrow">Find your next step</p>
-          <h2 id="tools-heading">The right tool for the task</h2>
+          <h1 id="tools-heading">The right tool for the task</h1>
           <p class="section-description">Search by name, format, or what you need to do.</p>
         </div>
         <span class="tool-count"><strong>{{ available_tool_count }}</strong> available of {{ tool_count }} tools</span>
@@ -43,7 +43,7 @@
               {{ "PDF" if category.id == "pdf" else "IMG" }}
             </div>
             <div>
-              <h3 id="{{ category.id }}-heading">{{ category.name }}</h3>
+              <h2 id="{{ category.id }}-heading">{{ category.name }}</h2>
               <p>{{ category.description }}</p>
             </div>
           </div>
@@ -58,7 +58,7 @@
                 <span class="tool-icon tool-icon-{{ category.id }}" aria-hidden="true">{{ tool.icon }}</span>
                 <span class="tool-status">{{ "Available" if tool.get("endpoint") else "Coming soon" }}</span>
               </div>
-              <h4>{{ tool.name }}</h4>
+              <h3>{{ tool.name }}</h3>
               <p>{{ tool.description }}</p>
               {% if tool.get("endpoint") %}
               <a class="tool-card-footer" href="{{ url_for(tool.endpoint) }}">Open tool <span aria-hidden="true">↗</span></a>

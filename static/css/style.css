@@ -341,7 +341,7 @@ input:focus-visible {
   margin-bottom: 0.55rem;
 }
 
-.section-heading h2,
+.section-heading h1,
 .about-content h2 {
   margin: 0;
   font-size: clamp(1.7rem, 3vw, 2.45rem);
@@ -505,7 +505,7 @@ input:focus-visible {
   background: var(--blue-wash);
 }
 
-.category-heading h3 {
+.category-heading h2 {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 730;
@@ -572,7 +572,7 @@ input:focus-visible {
   white-space: nowrap;
 }
 
-.tool-card h4 {
+.tool-card h3 {
   margin: 0;
   font-size: 0.98rem;
   font-weight: 720;
